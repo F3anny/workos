@@ -1,0 +1,75 @@
+services:
+
+  # ── DATABASES ──────────────────────────────────────────
+  # Each service gets its own separate database
+  # This is the microservices rule — no sharing databases
+
+  auth-db:
+    image: postgres:15
+    container_name: workos-auth-db
+    environment:
+      POSTGRES_DB: auth_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5433:5432"
+    volumes:
+      - auth-db-data:/var/lib/postgresql/data
+
+  workspace-db:
+    image: postgres:15
+    container_name: workos-workspace-db
+    environment:
+      POSTGRES_DB: workspace_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5434:5432"
+    volumes:
+      - workspace-db-data:/var/lib/postgresql/data
+
+  tasks-db:
+    image: postgres:15
+    container_name: workos-tasks-db
+    environment:
+      POSTGRES_DB: tasks_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5435:5432"
+    volumes:
+      - tasks-db-data:/var/lib/postgresql/data
+
+  # ── MESSAGE BROKER ─────────────────────────────────────
+  # Services talk to each other asynchronously through this
+  # Example: Tasks Service publishes "task.created" event
+  #          Notification Service picks it up and sends email
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: workos-rabbitmq
+    ports:
+      - "5672:5672"      # port services use to connect
+      - "15672:15672"    # browser UI to see messages
+    environment:
+      RABBITMQ_DEFAULT_USER: admin
+      RABBITMQ_DEFAULT_PASS: password
+
+  # ── CACHE ──────────────────────────────────────────────
+  # API Gateway uses this to cache responses
+  # So it doesn't hit services on every single request
+
+  redis:
+    image: redis:7-alpine
+    container_name: workos-redis
+    ports:
+      - "6379:6379"
+
+# ── VOLUMES ────────────────────────────────────────────
+# This makes database data persist even if containers restart
+# Without this your data would be gone every time you restart
+
+volumes:
+  auth-db-data:
+  workspace-db-data:
+  tasks-db-data:
