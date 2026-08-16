@@ -1,20 +1,38 @@
-# Dependencies
-node_modules/
-
-# Environment variables - NEVER commit these
-
-# TypeScript compiled output
-dist/
-
-# Prisma generated client
-generated/
-
-# Logs
-*.log
-npm-debug.log*
-
-# OS files
-.DS_Store
-Thumbs.db
-config.bat
+# Dependencies
+
+node_modules/
+
+
+
+# Environment variables - NEVER commit these
+
+
+
+# TypeScript compiled output
+
+dist/
+
+
+
+# Prisma generated client
+
+generated/
+
+
+
+# Logs
+
+*.log
+
+npm-debug.log*
+
+
+
+# OS files
+
+.DS_Store
+
+Thumbs.db
+
+
 .env
